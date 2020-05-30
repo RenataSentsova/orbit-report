@@ -7,8 +7,7 @@
     <th>Orbit Type</th>
     <th>Launch Date</th>
   </tr>
-  <!-- TODO: put <tr *ngFor=""></tr> here -->
-  <tr *ngFor="let item of satellites">
+  <tr *ngFor="let item of satellites" [class.warning]="item.shouldShowWarning()">
     <th>{{item.name}}</th>
     <th>{{item.type}}</th>
     <th>{{item.operational}}</th>
