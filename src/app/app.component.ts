@@ -9,10 +9,12 @@ import {Satellite} from './info/satellite';
 export class AppComponent {
   sourceList: Satellite[];
   displayList: Satellite[];
+  types: string[];
 
   constructor() {
     this.displayList = [];
     this.sourceList = [];
+    this.types = [];
     const satellitesUrl = 'https://handlers.education.launchcode.org/static/satellites.json';
 
     window.fetch(satellitesUrl).then(function(response) {
@@ -21,6 +23,9 @@ export class AppComponent {
         if (fetchedSatellites.length) {
           fetchedSatellites.forEach(({ name, type, launchDate, orbitType, operational }) => {
             this.sourceList.push(new Satellite(name, type, launchDate, orbitType, operational));
+            if (!this.types.includes(type)) {
+              this.types.push(type);
+            }
           });
         } else {
           alert('Error: no data');
@@ -28,7 +33,6 @@ export class AppComponent {
         this.displayList = this.sourceList.slice(0);
       }.bind(this));
     }.bind(this));
-
   }
 
   search(searchTerm: string): void {
@@ -37,7 +41,10 @@ export class AppComponent {
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < this.sourceList.length; i++) {
       const name = this.sourceList[i].name.toLowerCase();
-      if (name.indexOf(searchTerm) >= 0) {
+      const type = this.sourceList[i].type.toLowerCase();
+      const orbitType = this.sourceList[i].orbitType.toLowerCase();
+      if (name.indexOf(searchTerm) >= 0 || type.indexOf(searchTerm) >= 0 ||
+        orbitType.indexOf(searchTerm) >= 0) {
         matchingSatellites.push(this.sourceList[i]);
       }
     }
